@@ -1,0 +1,24 @@
+{{ if .Values.prometheusOperator.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "kube-ingress-aws-controller.fullname" . }}-metrics"
+  labels:
+    app: {{ template "kube-ingress-aws-controller.name" . }}
+    chart: {{ template "kube-ingress-aws-controller.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: ingress
+spec:
+  ports:
+    - name: {{ .Values.prometheusOperator.endpoint.name }}
+      port: {{ .Values.prometheusOperator.endpoint.internalPort }}
+      targetPort: {{ .Values.prometheusOperator.endpoint.externalPort }}
+      protocol: TCP
+  selector:
+    app: "{{ template "kube-ingress-aws-controller.name" . }}-skipper"
+    chart: {{ template "kube-ingress-aws-controller.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: ingress
+{{ end }}

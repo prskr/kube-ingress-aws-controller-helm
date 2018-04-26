@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ template "kube-ingress-aws-controller.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "kube-ingress-aws-controller.name" . }}
+    chart: {{ template "kube-ingress-aws-controller.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: ingress
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kube-ingress-aws-controller.name" . }}
+      chart: {{ template "kube-ingress-aws-controller.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      component: ingress
+  updateStrategy:
+    type: {{ .Values.skipper.updateStrategy.type }}
+  template:
+    metadata:
+      name: {{ template "kube-ingress-aws-controller.fullname" . }}
+      labels:
+        app: "{{ template "kube-ingress-aws-controller.name" . }}-skipper"
+        chart: {{ template "kube-ingress-aws-controller.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        component: ingress
+    spec:
+      hostNetwork: true
+{{ if .Values.rbac.enable }}
+      serviceAccountName: {{ .Values.rbac.svcAccountName }}
+{{ end }}
+      containers:
+      - name: skipper-ingress
+        image: "{{ .Values.skipper.image.repository }}:{{ .Values.skipper.image.tag }}"
+        imagePullPolicy: {{ .Values.skipper.image.pullPolicy }}
+        ports:
+        - name: {{ .Values.skipper.endpoint.name }}
+          containerPort: {{ .Values.skipper.endpoint.internalPort }}
+          hostPort: {{ .Values.skipper.endpoint.externalPort }}
+{{ if .Values.prometheusOperator.enable }}
+        - name: {{ .Values.prometheusOperator.endpoint.name }}
+          containerPort: {{ .Values.prometheusOperator.endpoint.internalPort }}
+{{ end }}
+        args:
+          - "skipper"
+          - "-kubernetes"
+          - "-kubernetes-in-cluster"
+          - "-address=:{{ .Values.skipper.endpoint.internalPort }}"
+          - "-proxy-preserve-host"
+          - "-serve-host-metrics"
+          - "-enable-ratelimits"
+          - "-experimental-upgrade"
+          - "-metrics-exp-decay-sample"
+          - "-kubernetes-https-redirect=true"
+          - "-application-log-level={{ .Values.skipper.logLevel }}"
+{{ if .Values.prometheusOperator.enable }}
+          - "-enable-prometheus-metrics"
+{{ end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+
+        readinessProbe:
+          httpGet:
+            path: /kube-system/healthz
+            port: {{ .Values.skipper.endpoint.internalPort }}
+          initialDelaySeconds: 5
+          timeoutSeconds: 5

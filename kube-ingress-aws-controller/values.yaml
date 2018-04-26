@@ -2,28 +2,56 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+skipper:
+  logLevel: INFO
+  updateStrategy:
+    type: RollingUpdate
+  endpoint:
+    name: skipper
+    internalPort: 9999
+    externalPort: 9999
+  image:
+    repository: registry.opensource.zalan.do/pathfinder/skipper
+    tag: latest
+    pullPolicy: IfNotPresent
+
+ingressController:
+  replicas: 1
+  awsRegion: ""
+  image:
+    repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
+    tag: latest
+    pullPolicy: IfNotPresent
+
+kube2iam:
+  enable: false
+  awsArn: ""
 
 prometheusOperator:
+  jobLabel: kube-ingress-aws-controller
+  monitorName: kube-aws-ingress-metrics
+  namespace: monitoring
   enable: false
+  scrapeInterval: 30s
+  scrapePath: /metrics
+  labels:
+    prometheus: kube-prometheus
+  endpoint:
+    name: skipper-metrics
+    internalPort: 9911
+    externalPort: 9911
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
+resources:
+  limits:
+   cpu: 200m
+   memory: 200Mi
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+rbac:
+  enable: false
+  svcAccountName: aws-ingress-controller
+  svcAccountNamespace: kube-system
+  clusterRoleName: aws-ingress-controller
+  clusterRoleBindingName: aws-ingress-controller

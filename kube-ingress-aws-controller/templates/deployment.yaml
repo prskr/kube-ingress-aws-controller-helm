@@ -1,51 +1,43 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "kube-ingress-aws-controller.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "kube-ingress-aws-controller.name" . }}
     chart: {{ template "kube-ingress-aws-controller.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    component: ingress
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.ingressController.replicas }}
   selector:
     matchLabels:
       app: {{ template "kube-ingress-aws-controller.name" . }}
+      chart: {{ template "kube-ingress-aws-controller.chart" . }}
       release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      component: ingress
   template:
     metadata:
+{{ if .Values.kube2iam.enable }}
+      annotations:
+        iam.amazonaws.com/role: {{ .Values.kube2iam.awsArn }}
+{{ end }}
       labels:
         app: {{ template "kube-ingress-aws-controller.name" . }}
+        chart: {{ template "kube-ingress-aws-controller.chart" . }}
         release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        component: ingress
     spec:
+{{ if .Values.rbac.enable }}
+      serviceAccountName: {{ .Values.rbac.svcAccountName }}
+{{ end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.ingressController.image.repository }}:{{ .Values.ingressController.image.tag }}"
+        imagePullPolicy: {{ .Values.ingressController.image.pullPolicy }}
+        env:
+        - name: AWS_REGION
+          value: {{ .Values.ingressController.awsRegion }}

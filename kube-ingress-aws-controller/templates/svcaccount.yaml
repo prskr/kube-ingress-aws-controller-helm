@@ -1,0 +1,9 @@
+{{- with .Values.rbac }}
+{{- if .enable }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name:  {{ .svcAccountName }}
+  namespace: {{ .svcAccountNamespace }}
+{{- end }}
+{{- end }}
