@@ -57,8 +57,11 @@ spec:
           - "-metrics-exp-decay-sample"
           - "-kubernetes-https-redirect=true"
           - "-application-log-level={{ .Values.skipper.logLevel }}"
+          - "-lb-healthcheck-interval=3s"
+          - "-enable-connection-metrics"
+          - "-reverse-source-predicate"
 {{ if .Values.prometheusOperator.enable }}
-          - "-enable-prometheus-metrics"
+          - "-metrics-flavour=prometheus"
 {{ end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
