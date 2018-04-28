@@ -11,12 +11,11 @@ The minimal deployment of this chart looks like this:
 * run the following snippet and adjust the placeholders for **ingressController.awsRegion**
 
 ```bash
-helm upgrade \
-    --install \
-    --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
-    "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
+  --install \
+  --wait \
+  --set ingressController.awsRegion="<AWS region>" \
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ### Other namespace than `default`
@@ -24,70 +23,70 @@ helm upgrade \
 To deploy the ingress controller to a specific namespace run it like this and adjust the **--namespace** value:
 
 ```bash
-helm upgrade \
-    --install \
-    --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
-    --namespace "<your-namespace-goes-here>" \
-    "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
+  --install \
+  --wait \
+  --set ingressController.awsRegion="<AWS region>" \
+  --namespace "<your-namespace-goes-here>" \
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ### Enable `rbac`
 
 ```bash
-helm upgrade \
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
+    --set ingressController.awsRegion="<AWS region>" \
     --set rbac.enable=true \
     --namespace "<your-namespace-goes-here>" \
-    "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ### Enable [prometheus-operator](https://github.com/coreos/prometheus-operator)
 
 ```bash
-helm upgrade \
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
+    --set ingressController.awsRegion="<AWS region>" \
     --set prometheusOperator.enable=true \
     --namespace "<your-namespace-goes-here>" \
-    "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ### Enable [kube2iam](https://github.com/jtblin/kube2iam)
 
 ```bash
-helm upgrade \
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
+    --set ingressController.awsRegion="<AWS region>" \
     --set kube2iam.enable=true \
     --set kube2iam.awsArn="<your AWS ARN goes here>" \
     --namespace "<your-namespace-goes-here>" \
-    "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ## Debugging
 
 ```bash
-helm upgrade \
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
-    --set ingressController.awsRegion="<your AWS region e.g. us-east-1>" \
+    --set ingressController.awsRegion="<AWS region>" \
     --set skipper.logLevel="DEBUG" \
     --namespace "<your-namespace-goes-here>" \
     "kube-ingress-aws-controller" \
-    kube-ingress-aws-controller/
+  "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
 ## Validation
 
 ```bash
-helm lint --set kube2iam.enable=true,prometheusOperator.enable=true,rbac.enable=true kube-ingress-aws-controller/
+helm lint \
+    --set kube2iam.enable=true \
+    --set prometheusOperator.enable=true \
+    --set rbac.enable=true \
+    kube-ingress-aws-controller/
 ```
