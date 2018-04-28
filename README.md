@@ -170,7 +170,7 @@ To create the required role with the `aws` CLI save the policy above as `policy-
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::406035788625:role/nodes.eu.k8s.local"
+        "AWS": "<ARN of your worker node role>"
       },
       "Action":"sts:AssumeRole"
     }
@@ -178,7 +178,9 @@ To create the required role with the `aws` CLI save the policy above as `policy-
 }
 ```
 
-and run this bash snippet to create the required role:
+_Note: the trust policy is based on a KOPS deployment where every worker gets a worker role assigned by default. If you're using a different kind of deployment make sure that the `Principal` includes your Kubernetes worker node role!_
+
+Run this bash snippet to create the required role:
 
 ```bash
 ROLE_NAME="<Name of your role e.g. SkipperIngress>"

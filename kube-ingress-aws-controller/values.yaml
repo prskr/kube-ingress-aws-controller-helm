@@ -1,44 +1,67 @@
-# Default values for kube-ingress-aws-controller.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
+# configuration values for Skipper
 skipper:
+  # Overwrites the log level if set
   logLevel: ''
+  # enables ingress class filtering if set
   ingressClass: ''
+  # update strategy for the daemonset
   updateStrategy:
     type: RollingUpdate
+  # endpoint settings for the Skipper endpoint
   endpoint:
     name: skipper
     internalPort: 9999
     externalPort: 9999
+  # image settings for the Skipper daemonset
   image:
     repository: registry.opensource.zalan.do/pathfinder/skipper
     tag: v0.9.202
     pullPolicy: IfNotPresent
 
+# configuration for the ingress-controller
 ingressController:
+  # default of 1 should be enough because it only will prevent the creation of new
+  # ALB rules if the pod is not present in case of updates or outages
   replicas: 1
+  # REQUIRED setting for kube-ingress-aws-controller
+  # if not set kube-ingress-aws-controller won't be able create ALBs at all
   awsRegion: ""
+  # image settings for kube-ingress-aws-controller
   image:
     repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
     tag: v0.6.8 
     pullPolicy: IfNotPresent
 
+# configuration for kube2iam
 kube2iam:
+  # ARN kube2iam should assign to Skipper and the ingress controller
+  # to create ALBs within AWS
   awsArn: ""
 
+# configuration for Prometheus-Operator
 prometheusOperator:
+  # label for Prometheus job
   jobLabel: kube-ingress-aws-controller
+  # name of the ServiceMonitor resource
   monitorName: kube-aws-ingress-metrics
+  # Namespace where Prometheus-Operator is deployed
+  # all ServiceMonitors have to be deployed in the Namespace where Prometheus-Operator
+  # is deployed
   namespace: monitoring
+  # enable Prometheus-Operator support
   enable: false
+  # Interval how often Prometheus will scrape metrics
   scrapeInterval: 30s
+  # Additonal labels assigned to the ServiceMonitor
+  # by default Prometheus-Operator uses the following default as selector
   labels:
     prometheus: kube-prometheus
+  # metrics endpoint configuration
   endpoint:
     name: skipper-metrics
     externalPort: 9911
 
+# Configuration for resource alocation of the daemonset
 resources:
   limits:
    cpu: 200m
@@ -47,9 +70,15 @@ resources:
   #  cpu: 100m
   #  memory: 128Mi
 
+# Configuration for Kubernetes RBAC
 rbac:
+  # enable RBAC support
   enable: false
+  # name of the ServiceAccount
   svcAccountName: aws-ingress-controller
+  # Namespace where ServiceAccount will be deployed
   svcAccountNamespace: kube-system
+  # Name of the ClusterRole for Skipper
   clusterRoleName: aws-ingress-controller
+  # Name of the ClusterRoleBinding
   clusterRoleBindingName: aws-ingress-controller
