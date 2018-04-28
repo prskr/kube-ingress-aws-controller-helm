@@ -15,7 +15,7 @@ install:
   - PATH=`pwd`/linux-amd64/:$PATH
   - mkdir -p ~/.helm/plugins
   - git clone https://github.com/app-registry/appr-helm-plugin.git ~/.helm/plugins/registry
-  - curl -O ~/.helm/plugins/registry/appr "$APPR_URL"
+  - curl -L "$APPR_URL" -o ~/.helm/plugins/registry/appr
   - chmod +x ~/.helm/plugins/registry/appr
   - helm version --client
   - helm init --client-only

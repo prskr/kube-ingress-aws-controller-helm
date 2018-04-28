@@ -1,5 +1,7 @@
 # Helm chart for [kube-ingress-aws-controller](https://github.com/zalando-incubator/kube-ingress-aws-controller)
 
+[![Build Status](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm.svg?branch=master)](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm)
+
 ## Deployment
 
 ## Helm registry
