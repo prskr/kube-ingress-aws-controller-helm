@@ -12,7 +12,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "kube-ingress-aws-controller.name" . }}
+      app: "{{ template "kube-ingress-aws-controller.name" . }}-skipper"
       chart: {{ template "kube-ingress-aws-controller.chart" . }}
       release: {{ .Release.Name }}
       heritage: {{ .Release.Service }}
