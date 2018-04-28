@@ -11,8 +11,11 @@ env:
 install:
   - curl "https://kubernetes-helm.storage.googleapis.com/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar zx
   - PATH=`pwd`/linux-amd64/:$PATH
+  - mkdir -p ~/.helm/plugins
+  - git clone https://github.com/app-registry/appr-helm-plugin.git ~/.helm/plugins/registry
   - helm version --client
   - helm init --client-only
+  - helm registry version quay.io
 
 script:
   - helm lint --set kube2iam.enable=true,prometheusOperator.enable=true kube-ingress-aws-controller/
