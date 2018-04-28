@@ -6,6 +6,8 @@ os:
 env:
   global:
     - HELM_VERSION=2.8.2
+    - APPR_VERSION=0.7.4
+    - APPR_URL=https://github.com/app-registry/appr/releases/download/v$APPR_VERSION/appr-linux-x64
     - secure: "admIUx22raND7SP36J/VdHMeDiDSAoCD1MypDqRO88abf5Ndbu8TOcWj+hdWXLGuvsO6lgHZNEVxIQ+zyYtB9VcHC80IuoDI0Olu4qHn/5JEmthjaA/1aNiG1KNQGfayeWyaUfemIixRBnZMDnFyacK5gl+TvhQQFHf8lhZAZ1T44m/FMAAGfYVz9rVUG/nJOEJ7bflXdh3j9A3sI3xDHUIsKQiv46lS+7+VMzAbBq1yQYlhC0pq68X6ND3+DKkqEVC/tzVNoX4JHvWlrD4JpmlE1q10npqqxRDmC1A6aRLCjxLr6+s0JCVEfT0kRGUevGkicq6P7huyUGWxSbPSjXNVxG98rlFqMa8mZFBFJ9SRQC8KCBdGa8leYYYlZK9r4u652VhTSFJBNDKHmINDiSTOV7jeYPHh288DjtZjEiTJXM/WkV/xwq2rWy/B3yPm7C4pjr9N2lIhBI5FrgOKrnY9/trO7oou4OkCj5DeD2UjrH9k481G2A98nDoq18p9EUALJYV/Mm/yiCsqRracguSt0Uf0tf4ijYixEecfr/aDUk2A25Y+eZF8PawftNIn3frUOBOUdI5BvouRAg+R9cxfXlBoI6KVSeudDntBZuvkbT5VZBokbkdVosAO14T0UxZS7CQfHKXlbDo7MWqVWI8/xi12HaqiegnB6cEfi/M="
 
 install:
@@ -13,6 +15,7 @@ install:
   - PATH=`pwd`/linux-amd64/:$PATH
   - mkdir -p ~/.helm/plugins
   - git clone https://github.com/app-registry/appr-helm-plugin.git ~/.helm/plugins/registry
+  - curl -O ~/.helm/plugins/registry/appr "$APPR_URL"
   - helm version --client
   - helm init --client-only
   - helm registry version quay.io
