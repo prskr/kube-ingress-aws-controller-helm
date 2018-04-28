@@ -8,7 +8,7 @@ env:
     - HELM_VERSION=2.8.2
     - APPR_VERSION=0.7.4
     - APPR_URL=https://github.com/app-registry/appr/releases/download/v$APPR_VERSION/appr-linux-x64
-    - secure: "admIUx22raND7SP36J/VdHMeDiDSAoCD1MypDqRO88abf5Ndbu8TOcWj+hdWXLGuvsO6lgHZNEVxIQ+zyYtB9VcHC80IuoDI0Olu4qHn/5JEmthjaA/1aNiG1KNQGfayeWyaUfemIixRBnZMDnFyacK5gl+TvhQQFHf8lhZAZ1T44m/FMAAGfYVz9rVUG/nJOEJ7bflXdh3j9A3sI3xDHUIsKQiv46lS+7+VMzAbBq1yQYlhC0pq68X6ND3+DKkqEVC/tzVNoX4JHvWlrD4JpmlE1q10npqqxRDmC1A6aRLCjxLr6+s0JCVEfT0kRGUevGkicq6P7huyUGWxSbPSjXNVxG98rlFqMa8mZFBFJ9SRQC8KCBdGa8leYYYlZK9r4u652VhTSFJBNDKHmINDiSTOV7jeYPHh288DjtZjEiTJXM/WkV/xwq2rWy/B3yPm7C4pjr9N2lIhBI5FrgOKrnY9/trO7oou4OkCj5DeD2UjrH9k481G2A98nDoq18p9EUALJYV/Mm/yiCsqRracguSt0Uf0tf4ijYixEecfr/aDUk2A25Y+eZF8PawftNIn3frUOBOUdI5BvouRAg+R9cxfXlBoI6KVSeudDntBZuvkbT5VZBokbkdVosAO14T0UxZS7CQfHKXlbDo7MWqVWI8/xi12HaqiegnB6cEfi/M="
+    - secure: "DSeVGHpPrZamHMk/BMu7+roiPC3KA6umtlpOQv8a5+lJtc0QVj6Py3KkiM1CL5xZBuLOQrXPYc+Aopzq7o6L4mpmee8CGwxkQoAj0LsNR7QMI6QmjtTe7H23XXE64Z8v+TzYF34OtYC2hMg8gDQR9bhvF41RTPXBh26EntRT/xz8bJiIrAoHT3jvRQDw/OevZFnUw5uq0TyWadeLMUmqbaBZuQOqiv8SOcs6/QCjBpy/5v5gYVtbCrEVPoullX/Fngue1P6f36fAcJRrD5gwMIMdKTqSFF7XRxYFRKcjOdV+5enW8gw4IjzUxATm9AcoRv0mg1YqZ5jJ73rdHwW+Cm/v/cjyis0bDQfvb5bZpX+dm/VGd+Ror5LdtBKgBRvxxNxdYLy/j0aftoe7rsYQrhkrCDCLFIVbGmYTQia+NJp5n+2GDQxMuFlrUpzrkhI7OV5Cj8IW7na/fCPWFitc4dzF7q8DdGSqNyY1Ir1gKO/wXXNwgtj0+yFfFBja2M3aHFxdmWGZwlg16PR9cyLq/tzwTSo1eeHihODM4JL0959ZhtfqyexO6OFE2eMW1mD7/2lP/B9QdfyK/qi/2VnZNY4n1hu7KIOpQSp6biUiMAqHAIU36THtEpIwkx8fM9L+mHlwAWY2TquVBDHn2mSAD4s4BqEGMdgywqh5CumSk60="
 
 install:
   - curl "https://kubernetes-helm.storage.googleapis.com/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar zx
@@ -23,7 +23,7 @@ install:
 
 script:
   - helm lint --set kube2iam.enable=true,prometheusOperator.enable=true kube-ingress-aws-controller/
-  - helm registry login -u baez+travis -p "$QUAY_IO_TOKEN" quay.io
+  - helm registry login -u baez -p "$QUAY_IO_TOKEN" quay.io
   - cd kube-ingress-aws-controller/
   - helm registry push --namespace baez --channel alpha quay.io
 
