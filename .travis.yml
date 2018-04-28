@@ -1,0 +1,24 @@
+language: python
+
+os:
+  - linux
+
+env:
+  global:
+    - HELM_VERSION=2.8.2
+    - secure: "admIUx22raND7SP36J/VdHMeDiDSAoCD1MypDqRO88abf5Ndbu8TOcWj+hdWXLGuvsO6lgHZNEVxIQ+zyYtB9VcHC80IuoDI0Olu4qHn/5JEmthjaA/1aNiG1KNQGfayeWyaUfemIixRBnZMDnFyacK5gl+TvhQQFHf8lhZAZ1T44m/FMAAGfYVz9rVUG/nJOEJ7bflXdh3j9A3sI3xDHUIsKQiv46lS+7+VMzAbBq1yQYlhC0pq68X6ND3+DKkqEVC/tzVNoX4JHvWlrD4JpmlE1q10npqqxRDmC1A6aRLCjxLr6+s0JCVEfT0kRGUevGkicq6P7huyUGWxSbPSjXNVxG98rlFqMa8mZFBFJ9SRQC8KCBdGa8leYYYlZK9r4u652VhTSFJBNDKHmINDiSTOV7jeYPHh288DjtZjEiTJXM/WkV/xwq2rWy/B3yPm7C4pjr9N2lIhBI5FrgOKrnY9/trO7oou4OkCj5DeD2UjrH9k481G2A98nDoq18p9EUALJYV/Mm/yiCsqRracguSt0Uf0tf4ijYixEecfr/aDUk2A25Y+eZF8PawftNIn3frUOBOUdI5BvouRAg+R9cxfXlBoI6KVSeudDntBZuvkbT5VZBokbkdVosAO14T0UxZS7CQfHKXlbDo7MWqVWI8/xi12HaqiegnB6cEfi/M="
+
+install:
+  - curl "https://kubernetes-helm.storage.googleapis.com/helm-v${HELM_VERSION}-linux-amd64.tar.gz" | tar zx
+  - mv linux-amd64/helm /usr/bin/
+  - helm version --client
+
+script:
+  - helm lint --set kube2iam.enable=true,prometheusOperator.enable=true kube-ingress-aws-controller/
+
+deploy:
+  provider: script
+  script: bash scripts/deploy.sh
+  on:
+    tags: true
+    all_branches: false
