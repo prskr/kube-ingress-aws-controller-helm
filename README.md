@@ -2,6 +2,13 @@
 
 ## Deployment
 
+## Helm registry
+
+The chart is available at the [Quay.io registry](https://quay.io/application/baez/kube-ingress-aws-controller?tab=description).
+
+To be able to install the chart you will need the [registry plugin](https://github.com/app-registry/appr-helm-plugin).
+Please follow the install guide in the GitHub repository.
+
 ### Minimal
 
 The minimal deployment of this chart looks like this:
