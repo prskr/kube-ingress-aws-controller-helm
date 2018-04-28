@@ -20,7 +20,7 @@ spec:
       component: ingress
   template:
     metadata:
-{{ if .Values.kube2iam.enable }}
+{{ if .Values.kube2iam.awsArn }}
       annotations:
         iam.amazonaws.com/role: {{ .Values.kube2iam.awsArn }}
 {{ end }}

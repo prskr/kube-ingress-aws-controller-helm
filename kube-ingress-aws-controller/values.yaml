@@ -3,7 +3,8 @@
 # Declare variables to be passed into your templates.
 
 skipper:
-  logLevel: INFO
+  logLevel: ''
+  ingressClass: ''
   updateStrategy:
     type: RollingUpdate
   endpoint:
@@ -24,7 +25,6 @@ ingressController:
     pullPolicy: IfNotPresent
 
 kube2iam:
-  enable: false
   awsArn: ""
 
 prometheusOperator:

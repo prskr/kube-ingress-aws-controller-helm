@@ -56,12 +56,17 @@ spec:
           - "-experimental-upgrade"
           - "-metrics-exp-decay-sample"
           - "-kubernetes-https-redirect=true"
+{{ if .Values.skipper.logLevel }}
           - "-application-log-level={{ .Values.skipper.logLevel }}"
+{{ end }}
           - "-lb-healthcheck-interval=3s"
           - "-enable-connection-metrics"
           - "-reverse-source-predicate"
 {{ if .Values.prometheusOperator.enable }}
           - "-metrics-flavour=prometheus"
+{{ end }}
+{{ if .Values.skipper.ingressClass }}
+          - "--kubernetes-ingress-class={{ .Values.skipper.ingressClass }}"
 {{ end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}

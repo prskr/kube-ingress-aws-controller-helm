@@ -11,6 +11,7 @@
     - [Enable prometheus-operator](#enable-prometheus-operator)
     - [Enable kube2iam](#enable-kube2iam)
     - [Debugging](#debugging)
+    - [Enable `ingress.class` annotation handling](#enable-ingressclass-annotation-handling)
     - [Deploy with `values.yaml` file](#deploy-with-valuesyaml-file)
   - [Development](#development)
 
@@ -197,14 +198,13 @@ aws iam get-role --role-name $ROLE_NAME | jq -C ".Role.Arn" -r
 ```
 
 This Helm chart includes support for kube2iam but it is disabled by default.
-To deploy **kube-ingress-aws-controller** with kube2iam support add the flags `--set kube2iam.enable=true` and `--set kube2iam.awsArn=<your role ARN>` to the `helm` CLI like this:
+To deploy **kube-ingress-aws-controller** with kube2iam support add the flag `--set kube2iam.awsArn=<your role ARN>` to the `helm` CLI like this:
 
 ```bash
 helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
     --set ingressController.awsRegion="<AWS region>" \
-    --set kube2iam.enable=true \
     --set kube2iam.awsArn="<your AWS ARN goes here>" \
   "<your release name e.g. kube-ingress-aws-controller>"
 ```
@@ -231,6 +231,28 @@ The available log levels are:
 - `INFO`
 - `DEBUG`
 
+### Enable `ingress.class` annotation handling
+
+If you want to split the traffic to different Skipper deployments you can define the value `skipper.ingressClass` which will enable the built-in support of Skipper to parse the pod annotation `kubernetes.io/ingress.class`.
+
+Pass the flag `--set skipper.ingressClass=skipper-prod` to the `helm` CLI like this
+
+```bash
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
+    --install \
+    --wait \
+    --set ingressController.awsRegion="<AWS region>" \
+    --set skipper.ingressClass="skipper-prod" \
+    "kube-ingress-aws-controller" \
+  "<your release name e.g. kube-ingress-aws-controller>"
+```
+
+To enable the parsing support and force Skipper to filter for pods with the annotation:
+
+```yaml
+kubernetes.io/ingress.class: skipper-prod
+```
+
 ### Deploy with `values.yaml` file
 
 If you don't want to pass all options via `--set` you can also copy the shipped `./kube-ingress-aws-controller/values.yaml`, adopt it and pass it to the `helm` CLI like this:
@@ -249,7 +271,23 @@ If you add functionality to this chart please check if the following validation 
 
 ```bash
 helm lint \
-    --set kube2iam.enable=true \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
+    --set skipper.ingressClass=skipper \
+    --set skipper.logLevel=INFO \
+    --set prometheusOperator.enable=true \
+    --set rbac.enable=true \
+    kube-ingress-aws-controller/
+```
+
+or if you have Kubernetes with installed Tiller available:
+
+```bash
+helm install \
+    --dry-run \
+    --debug \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
+    --set skipper.ingressClass=skipper \
+    --set skipper.logLevel=INFO \
     --set prometheusOperator.enable=true \
     --set rbac.enable=true \
     kube-ingress-aws-controller/
