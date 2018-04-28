@@ -32,7 +32,7 @@ deploy:
   script:
     - helm registry login -u baez+travis -p "$QUAY_IO_TOKEN" quay.io
     - cd kube-ingress-aws-controller/
-    - helm registry push -v ${TRAVIS_TAG} --namespace baez quay.io
+    - helm registry push -v ${TRAVIS_TAG} --namespace baez --channel stable quay.io
   on:
     tags: true
     all_branches: false
