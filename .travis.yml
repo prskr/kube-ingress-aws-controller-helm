@@ -16,10 +16,16 @@ install:
 
 script:
   - helm lint --set kube2iam.enable=true,prometheusOperator.enable=true kube-ingress-aws-controller/
+  - helm registry login -u baez+travis -p "$QUAY_IO_TOKEN" quay.io
+  - cd kube-ingress-aws-controller/
+  - helm registry push --namespace baez --channel alpha quay.io
 
 deploy:
   provider: script
-  script: bash scripts/deploy.sh
+  script:
+    - helm registry login -u baez+travis -p "$QUAY_IO_TOKEN" quay.io
+    - cd kube-ingress-aws-controller/
+    - helm registry push -v ${TRAVIS_TAG} --namespace baez quay.io
   on:
     tags: true
     all_branches: false
