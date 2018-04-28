@@ -16,6 +16,7 @@ install:
   - mkdir -p ~/.helm/plugins
   - git clone https://github.com/app-registry/appr-helm-plugin.git ~/.helm/plugins/registry
   - curl -O ~/.helm/plugins/registry/appr "$APPR_URL"
+  - chmod +x ~/.helm/plugins/registry/appr
   - helm version --client
   - helm init --client-only
   - helm registry version quay.io
