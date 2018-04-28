@@ -43,7 +43,7 @@ spec:
           hostPort: {{ .Values.skipper.endpoint.externalPort }}
 {{ if .Values.prometheusOperator.enable }}
         - name: {{ .Values.prometheusOperator.endpoint.name }}
-          containerPort: {{ .Values.prometheusOperator.endpoint.internalPort }}
+          containerPort: 9911
 {{ end }}
         args:
           - "skipper"

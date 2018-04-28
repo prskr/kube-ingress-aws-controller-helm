@@ -23,6 +23,6 @@ spec:
       - {{ .Release.Namespace }}
   endpoints:
     - port: {{ .Values.prometheusOperator.endpoint.name }}
-      path: {{ .Values.prometheusOperator.scrapePath }}
+      path: /metrics
       interval: {{ .Values.prometheusOperator.scrapeInterval }}
 {{ end }}

@@ -33,12 +33,10 @@ prometheusOperator:
   namespace: monitoring
   enable: false
   scrapeInterval: 30s
-  scrapePath: /metrics
   labels:
     prometheus: kube-prometheus
   endpoint:
     name: skipper-metrics
-    internalPort: 9911
     externalPort: 9911
 
 resources:

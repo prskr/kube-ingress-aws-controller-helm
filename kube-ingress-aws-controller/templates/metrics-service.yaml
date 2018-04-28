@@ -12,7 +12,7 @@ metadata:
 spec:
   ports:
     - name: {{ .Values.prometheusOperator.endpoint.name }}
-      port: {{ .Values.prometheusOperator.endpoint.internalPort }}
+      port: 9911
       targetPort: {{ .Values.prometheusOperator.endpoint.externalPort }}
       protocol: TCP
   selector:
