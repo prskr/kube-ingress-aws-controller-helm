@@ -12,7 +12,7 @@ skipper:
     externalPort: 9999
   image:
     repository: registry.opensource.zalan.do/pathfinder/skipper
-    tag: latest
+    tag: v0.9.202
     pullPolicy: IfNotPresent
 
 ingressController:
@@ -20,7 +20,7 @@ ingressController:
   awsRegion: ""
   image:
     repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
-    tag: latest
+    tag: v0.6.8 
     pullPolicy: IfNotPresent
 
 kube2iam:
