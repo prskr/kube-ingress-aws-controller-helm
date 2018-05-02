@@ -1,3 +1,4 @@
+{{ if .Values.ingressController.awsRegion }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -41,3 +42,4 @@ spec:
         env:
         - name: AWS_REGION
           value: {{ .Values.ingressController.awsRegion }}
+{{ end }}
