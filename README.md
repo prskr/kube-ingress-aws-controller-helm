@@ -63,14 +63,14 @@ If you have RBAC enabled in your Kubernetes cluster you need the following addit
 - ClusterRoleBinding
 - ServiceAccount
 
-This is done by passing `--set rbac.enable=true` to the `helm` CLI like this:
+This is done by passing `--set rbac.create=true` to the `helm` CLI like this:
 
 ```bash
 helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
     --set ingressController.awsRegion="<AWS region>" \
-    --set rbac.enable=true \
+    --set rbac.create=true \
   "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
@@ -277,7 +277,7 @@ helm lint \
     --set skipper.ingressClass=skipper \
     --set skipper.logLevel=INFO \
     --set prometheusOperator.enable=true \
-    --set rbac.enable=true \
+    --set rbac.create=true \
     kube-ingress-aws-controller/
 ```
 
@@ -291,6 +291,6 @@ helm install \
     --set skipper.ingressClass=skipper \
     --set skipper.logLevel=INFO \
     --set prometheusOperator.enable=true \
-    --set rbac.enable=true \
+    --set rbac.create=true \
     kube-ingress-aws-controller/
 ```

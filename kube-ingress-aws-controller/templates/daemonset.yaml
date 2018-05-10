@@ -30,7 +30,7 @@ spec:
         component: ingress
     spec:
       hostNetwork: true
-{{ if .Values.rbac.enable }}
+{{ if .Values.rbac.create }}
       serviceAccountName: {{ .Values.rbac.svcAccountName }}
 {{ end }}
       containers:

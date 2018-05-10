@@ -73,7 +73,7 @@ resources:
 # Configuration for Kubernetes RBAC
 rbac:
   # enable RBAC support
-  enable: false
+  create: false
   # name of the ServiceAccount
   svcAccountName: aws-ingress-controller
   # Namespace where ServiceAccount will be deployed

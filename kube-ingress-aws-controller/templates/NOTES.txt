@@ -34,14 +34,14 @@ kube-ingress-aws-controller was not deployed due to missing AWS region.
 
 3. RBAC
 
-{{ if .Values.rbac.enable }}
+{{ if .Values.rbac.create }}
 Created RBAC resources:
 
 * ServiceAccount
 * ClusterRole
 * ClusterRoleBinding
 {{ else }}
-RBAC is disabled. If RBAC is enabled in your Kubernetes cluster pass the flag `--set rbac.enable=true` to the `helm` CLI when you deploy this chart or update your custom `values.yaml` file.
+RBAC is disabled. If RBAC is enabled in your Kubernetes cluster pass the flag `--set rbac.create=true` to the `helm` CLI when you deploy this chart or update your custom `values.yaml` file.
 {{ end }}
 
 4. kube2iam

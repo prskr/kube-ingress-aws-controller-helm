@@ -32,7 +32,7 @@ spec:
         heritage: {{ .Release.Service }}
         component: ingress
     spec:
-{{ if .Values.rbac.enable }}
+{{ if .Values.rbac.create }}
       serviceAccountName: {{ .Values.rbac.svcAccountName }}
 {{ end }}
       containers:
