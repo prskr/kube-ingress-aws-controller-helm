@@ -39,8 +39,8 @@ spec:
         imagePullPolicy: {{ .Values.skipper.image.pullPolicy }}
         ports:
         - name: {{ .Values.skipper.endpoint.name }}
-          containerPort: {{ .Values.skipper.endpoint.internalPort }}
-          hostPort: {{ .Values.skipper.endpoint.externalPort }}
+          containerPort: {{ .Values.skipper.endpoint.port }}
+          hostPort: {{ .Values.skipper.endpoint.port }}
 {{ if .Values.prometheusOperator.enable }}
         - name: {{ .Values.prometheusOperator.endpoint.name }}
           containerPort: 9911
@@ -49,7 +49,7 @@ spec:
           - "skipper"
           - "-kubernetes"
           - "-kubernetes-in-cluster"
-          - "-address=:{{ .Values.skipper.endpoint.internalPort }}"
+          - "-address=:{{ .Values.skipper.endpoint.port }}"
           - "-proxy-preserve-host"
           - "-serve-host-metrics"
           - "-enable-ratelimits"
@@ -74,6 +74,6 @@ spec:
         readinessProbe:
           httpGet:
             path: /kube-system/healthz
-            port: {{ .Values.skipper.endpoint.internalPort }}
+            port: {{ .Values.skipper.endpoint.port }}
           initialDelaySeconds: 5
           timeoutSeconds: 5

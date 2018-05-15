@@ -10,8 +10,7 @@ skipper:
   # endpoint settings for the Skipper endpoint
   endpoint:
     name: skipper
-    internalPort: 9999
-    externalPort: 9999
+    port: 9999
   # image settings for the Skipper daemonset
   image:
     repository: registry.opensource.zalan.do/pathfinder/skipper
