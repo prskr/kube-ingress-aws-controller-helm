@@ -95,14 +95,14 @@ To notify Prometheus-Operator that it should collect the metrics of Skipper the 
 - ServiceMonitor
 
 This helm chart includes the required manifest but does **not** deploy it by default.
-To enable support for Prometheus-Operator add the flat `--set prometheusOperator.enable=true` to your `helm` CLI like this:
+To enable support for Prometheus-Operator add the flat `--set prometheusOperator.create=true` to your `helm` CLI like this:
 
 ```bash
 helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --install \
     --wait \
     --set ingressController.awsRegion="<AWS region>" \
-    --set prometheusOperator.enable=true \
+    --set prometheusOperator.create=true \
   "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
@@ -276,7 +276,7 @@ helm lint \
     --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set skipper.ingressClass=skipper \
     --set skipper.logLevel=INFO \
-    --set prometheusOperator.enable=true \
+    --set prometheusOperator.create=true \
     --set rbac.create=true \
     kube-ingress-aws-controller/
 ```
@@ -290,7 +290,7 @@ helm install \
     --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set skipper.ingressClass=skipper \
     --set skipper.logLevel=INFO \
-    --set prometheusOperator.enable=true \
+    --set prometheusOperator.create=true \
     --set rbac.create=true \
     kube-ingress-aws-controller/
 ```

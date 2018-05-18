@@ -48,7 +48,7 @@ prometheusOperator:
   # is deployed
   namespace: monitoring
   # enable Prometheus-Operator support
-  enable: false
+  create: false
   # Interval how often Prometheus will scrape metrics
   scrapeInterval: 30s
   # Additonal labels assigned to the ServiceMonitor

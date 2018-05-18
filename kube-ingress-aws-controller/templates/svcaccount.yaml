@@ -1,5 +1,5 @@
 {{- with .Values.rbac }}
-{{- if .enable }}
+{{- if .create }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:

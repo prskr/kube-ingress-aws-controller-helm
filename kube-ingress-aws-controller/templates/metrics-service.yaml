@@ -1,4 +1,4 @@
-{{ if .Values.prometheusOperator.enable }}
+{{ if .Values.prometheusOperator.create }}
 apiVersion: v1
 kind: Service
 metadata:

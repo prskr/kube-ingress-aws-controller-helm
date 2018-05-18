@@ -41,7 +41,7 @@ spec:
         - name: {{ .Values.skipper.endpoint.name }}
           containerPort: {{ .Values.skipper.endpoint.port }}
           hostPort: {{ .Values.skipper.endpoint.port }}
-{{ if .Values.prometheusOperator.enable }}
+{{ if .Values.prometheusOperator.create }}
         - name: {{ .Values.prometheusOperator.endpoint.name }}
           containerPort: 9911
 {{ end }}
@@ -62,7 +62,7 @@ spec:
           - "-lb-healthcheck-interval=3s"
           - "-enable-connection-metrics"
           - "-reverse-source-predicate"
-{{ if .Values.prometheusOperator.enable }}
+{{ if .Values.prometheusOperator.create }}
           - "-metrics-flavour=prometheus"
 {{ end }}
 {{ if .Values.skipper.ingressClass }}

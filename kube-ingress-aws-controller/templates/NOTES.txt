@@ -56,7 +56,7 @@ Skipped creation of corresponding annotations.
 
 5. Prometheus-Operator
 
-{{ if .Values.prometheusOperator.enable }}
+{{ if .Values.prometheusOperator.create }}
 Prometheus-Operator integration is enabled.
 Added the following resources:
 
