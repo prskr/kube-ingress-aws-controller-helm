@@ -8,6 +8,7 @@ env:
     - HELM_VERSION=2.8.2
     - APPR_VERSION=0.7.4
     - APPR_URL=https://github.com/app-registry/appr/releases/download/v$APPR_VERSION/appr-linux-x64
+    - CHART_VERSION=0.0.1
     - secure: "StEnJfHoo8U2BNdDryECGCw7T64jeoWoDlW6oyKskxGmXciOiqo7P8izSH6OK77+iixjbckoQBjqlBtWXtx6YBuuZJxL12izU8Vtvnd7KOrMBtF7YNuEZs0B5UOif+m9c427Nmil47pNLVAqgexM5Pb3KaWqnBEx16HFzx3o5kWvHiumQlKunoE/X3/2SXo8Pd973XQL/sGGwhguGfKjfYtPfhq1rFpUJqNUHxlQfOVNRzM6tQ6UzJstyce/QNhTKk4Fevi0S+SgqXB8cTD9VH9vSYtSqIBSuhfim2uPYVympg70NTHMjmgMODWYV8wtkqXc7kfdLGY95RudQllcA9+8rCdqQUtbGdokYY0BA7P1Dxpq3PKjToRQBJR+/1jDODR6UHPQlT+kHThGaS9zRusLtlD7wGXwm18v8ADJJmRXA4pMsAj+v4XNfdhgGdFLER47LdsUm9rF7/+z50eUk1ofeKyAe8yHrxWrSbH9LurO+LVe5B9A98pRbYZkW4hbYjo3LvnwtIFEaXlq/cMDPEyY5mrFyn64SPrxE018gAzQBeLBAkthnhj8pZBbc3tmyll82QWlLbEowIBf3wK7f1jW25Fdg3rhdKIgy1ird/KmJVN94eTXvJu9jF4QqdogtJtTPnVGztpzglKAW1113s21M+0r8dYSte5R/Ivr2Sc="
 
 install:
@@ -25,7 +26,8 @@ script:
   - helm lint --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress",prometheusOperator.enable=true,skipper.ingressClass=skipper,skipper.logLevel=INFO kube-ingress-aws-controller/
   - helm registry login -u baez -p "$QUAY_IO_TOKEN" quay.io
   - cd kube-ingress-aws-controller/
-  - helm registry push --namespace baez --channel alpha quay.io
+  - helm registry delete-package quay.io/baez/kube-ingress-aws-controller@${CHART_VERSION} || true
+  - helm registry push -v ${CHART_VERSION} --namespace baez --channel alpha quay.io
 
 deploy:
   provider: script
