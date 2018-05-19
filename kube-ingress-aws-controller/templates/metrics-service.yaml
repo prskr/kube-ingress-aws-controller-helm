@@ -12,8 +12,8 @@ metadata:
 spec:
   ports:
     - name: {{ .Values.prometheusOperator.endpoint.name }}
-      port: 9911
-      targetPort: {{ .Values.prometheusOperator.endpoint.externalPort }}
+      port: {{ .Values.prometheusOperator.endpoint.port }}
+      targetPort: {{ .Values.prometheusOperator.endpoint.port }}
       protocol: TCP
   selector:
     app: "{{ template "kube-ingress-aws-controller.name" . }}-skipper"

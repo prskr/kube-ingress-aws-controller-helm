@@ -78,7 +78,7 @@ There are additional values you can override if you want to customize e.g. the n
 The following variables can be overridden:
 
 | Variable                      | Default value          |
-| ----------------------------- | ---------------------- |
+|-------------------------------|------------------------|
 | `rbac.svcAccountName`         | aws-ingress-controller |
 | `rbac.svcAccountNamespace`    | kube-system            |
 | `rbac.clusterRoleName`        | aws-ingress-controller |
@@ -108,15 +108,15 @@ helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
 
 There are a few more configuration options available you can pass to the CLI if required:
 
-| Variable                                   | Default value               | Description                                                                                                         |
-| ------------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `prometheusOperator.jobLabel`              | kube-ingress-aws-controller | Label of the Prometheus job                                                                                         |
-| `prometheusOperator.monitorName`           | kube-aws-ingress-metrics    | Name of the `ServiceMonitor` resource                                                                               |
-| `prometheusOperator.namespace`             | monitoring                  | Namespace where your Prometheus-Operator is deployed                                                                |
-| `prometheusOperator.scrapeInterval`        | 30s                         | Interval how often Prometheus will collect metrics                                                                  |
-| `prometheusOperator.labels[]`              | prometheus: kube-prometheus | Set of labels to add to the `ServiceMonitor` the default value reflects the default selector or Prometheus-Operator |
-| `prometheusOperator.endpoint.name`         | skipper-metrics             | Name of the port used in the `DaemonSet`, `Service` and `ServiceMonitor`                                            |
-| `prometheusOperator.endpoint.externalPort` | 9911                        | Port used by the `Service` to publish the metrics port                                                              |
+| Variable                            | Default value               | Description                                                                                                         |
+|-------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `prometheusOperator.jobLabel`       | kube-ingress-aws-controller | Label of the Prometheus job                                                                                         |
+| `prometheusOperator.monitorName`    | kube-aws-ingress-metrics    | Name of the `ServiceMonitor` resource                                                                               |
+| `prometheusOperator.namespace`      | monitoring                  | Namespace where your Prometheus-Operator is deployed                                                                |
+| `prometheusOperator.scrapeInterval` | 30s                         | Interval how often Prometheus will collect metrics                                                                  |
+| `prometheusOperator.labels[]`       | prometheus: kube-prometheus | Set of labels to add to the `ServiceMonitor` the default value reflects the default selector or Prometheus-Operator |
+| `prometheusOperator.endpoint.name`  | skipper-metrics             | Name of the port used in the `DaemonSet`, `Service` and `ServiceMonitor`                                            |
+| `prometheusOperator.endpoint.port`  | 9911                        | Port used by the `Service` to publish the metrics port                                                              |
 
 ### Enable [kube2iam](https://github.com/jtblin/kube2iam)
 

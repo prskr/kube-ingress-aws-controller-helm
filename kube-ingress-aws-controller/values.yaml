@@ -58,7 +58,7 @@ prometheusOperator:
   # metrics endpoint configuration
   endpoint:
     name: skipper-metrics
-    externalPort: 9911
+    port: 9911
 
 # Configuration for resource alocation of the daemonset
 resources:

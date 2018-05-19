@@ -43,7 +43,7 @@ spec:
           hostPort: {{ .Values.skipper.endpoint.port }}
 {{ if .Values.prometheusOperator.create }}
         - name: {{ .Values.prometheusOperator.endpoint.name }}
-          containerPort: 9911
+          containerPort: {{ .Values.prometheusOperator.endpoint.port }}
 {{ end }}
         args:
           - "skipper"
@@ -64,6 +64,7 @@ spec:
           - "-reverse-source-predicate"
 {{ if .Values.prometheusOperator.create }}
           - "-metrics-flavour=prometheus"
+          - "-support-listener=:{{ .Values.prometheusOperator.endpoint.port }}"
 {{ end }}
 {{ if .Values.skipper.ingressClass }}
           - "--kubernetes-ingress-class={{ .Values.skipper.ingressClass }}"
