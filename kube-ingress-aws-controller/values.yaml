@@ -13,7 +13,7 @@ ingressController:
   awsRegion: ""
   args: []
   metricsEndpoint:
-    name: kube-ingress-aws-controller-metrics
+    name: metrics
     port: 7979
 
 # configuration for kube2iam
