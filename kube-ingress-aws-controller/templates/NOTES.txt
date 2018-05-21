@@ -1,25 +1,4 @@
-1. Skipper
-
-{{ if .Values.skipper.ingressClass }}
-Got `ingressClass` filter.
-This Skipper deployment will only care about deployments with the following annotation:
-
-kubernetes.io/ingress.class: {{ .Values.skipper.ingressClass | quote }}
-
-{{ else }}
-Didn't receive an `ingressClass` filter.
-Skipper will try to publish every ingress created.
-{{ end }}
-
-{{ if .Values.skipper.logLevel }}
-Set Skipper log level to {{ .Values.skipper.logLevel | quote }}
-{{ end }}
-
-Deployed the following Skipper image:
-
-{{ .Values.skipper.image.repository }}:{{ .Values.skipper.image.tag }}
-
-2. kube-ingress-aws-controller:
+1. kube-ingress-aws-controller:
 
 {{ if .Values.ingressController.awsRegion }}
 kube-ingress-aws-controller was deployed and configured to create ALBs in the AWS region: {{.Values.ingressController.awsRegion }}
@@ -32,7 +11,7 @@ Deployed the following kube-ingress-aws-controller image:
 kube-ingress-aws-controller was not deployed due to missing AWS region.
 {{ end }}
 
-3. RBAC
+2. RBAC
 
 {{ if .Values.rbac.create }}
 Created RBAC resources:
@@ -44,7 +23,7 @@ Created RBAC resources:
 RBAC is disabled. If RBAC is enabled in your Kubernetes cluster pass the flag `--set rbac.create=true` to the `helm` CLI when you deploy this chart or update your custom `values.yaml` file.
 {{ end }}
 
-4. kube2iam
+3. kube2iam
 
 {{ if .Values.kube2iam.awsArn }}
 ARN for kube2iam was passed to the chart.
@@ -52,25 +31,4 @@ Added required annotations to enable AWS API access of Skipper and kube-ingress-
 {{ else }}
 Did not receive an ARN to enable kube2iam.
 Skipped creation of corresponding annotations.
-{{ end }}
-
-5. Prometheus-Operator
-
-{{ if .Values.prometheusOperator.create }}
-Prometheus-Operator integration is enabled.
-Added the following resources:
-
-* ServiceMonitor
-
-Prometheus job label is: {{ .Values.prometheusOperator.jobLabel }}.
-
-Name of the ServiceMonitor is: {{ .Values.prometheusOperator.monitorName }}.
-
-ServiceMonitor was deployed in namespace: {{ .Values.prometheusOperator.namespace }}.
-
-{{ else }}
-
-Prometheus-Operator integration is disabled.
-Didn't deploy any resources.
-
 {{ end }}

@@ -2,16 +2,13 @@
 
 [![Build Status](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm.svg?branch=master)](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm)
 
-- [Helm chart for kube-ingress-aws-controller](#helm-chart-for-kube-ingress-aws-controller)
+- [Helm chart for kube-ingress-aws-controller](#helm-chart-for-kube-ingress-aws-controllerhttps---githubcom-zalando-incubator-kube-ingress-aws-controller)
   - [Helm registry](#helm-registry)
   - [Deployment](#deployment)
     - [Minimal](#minimal)
     - [Other namespace than `default`](#other-namespace-than-default)
-    - [Enable RBAC](#enable-rbac)
-    - [Enable prometheus-operator](#enable-prometheus-operator)
-    - [Enable kube2iam](#enable-kube2iam)
-    - [Debugging](#debugging)
-    - [Enable `ingress.class` annotation handling](#enable-ingressclass-annotation-handling)
+    - [Enable RBAC](#enable-rbachttps---kubernetesio-docs-admin-authorization-rbac)
+    - [Enable kube2iam](#enable-kube2iamhttps---githubcom-jtblin-kube2iam)
     - [Deploy with `values.yaml` file](#deploy-with-valuesyaml-file)
   - [Development](#development)
 
@@ -84,40 +81,6 @@ The following variables can be overridden:
 | `rbac.clusterRoleName`        | aws-ingress-controller |
 | `rbac.clusterRoleBindingName` | aws-ingress-controller |
 
-### Enable [prometheus-operator](https://github.com/coreos/prometheus-operator)
-
-Prometheus-Operator is project that deploys [Prometheus](https://prometheus.io/) to your Kubernetes cluster.
-
-_Note: there's also a [Helm chart](https://github.com/coreos/prometheus-operator/tree/master/helm) available for Prometheus-Operator._
-
-To notify Prometheus-Operator that it should collect the metrics of Skipper the following additional resources are required:
-
-- ServiceMonitor
-
-This helm chart includes the required manifest but does **not** deploy it by default.
-To enable support for Prometheus-Operator add the flat `--set prometheusOperator.create=true` to your `helm` CLI like this:
-
-```bash
-helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
-    --install \
-    --wait \
-    --set ingressController.awsRegion="<AWS region>" \
-    --set prometheusOperator.create=true \
-  "<your release name e.g. kube-ingress-aws-controller>"
-```
-
-There are a few more configuration options available you can pass to the CLI if required:
-
-| Variable                            | Default value               | Description                                                                                                         |
-|-------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------|
-| `prometheusOperator.jobLabel`       | kube-ingress-aws-controller | Label of the Prometheus job                                                                                         |
-| `prometheusOperator.monitorName`    | kube-aws-ingress-metrics    | Name of the `ServiceMonitor` resource                                                                               |
-| `prometheusOperator.namespace`      | monitoring                  | Namespace where your Prometheus-Operator is deployed                                                                |
-| `prometheusOperator.scrapeInterval` | 30s                         | Interval how often Prometheus will collect metrics                                                                  |
-| `prometheusOperator.labels[]`       | prometheus: kube-prometheus | Set of labels to add to the `ServiceMonitor` the default value reflects the default selector or Prometheus-Operator |
-| `prometheusOperator.endpoint.name`  | skipper-metrics             | Name of the port used in the `DaemonSet`, `Service` and `ServiceMonitor`                                            |
-| `prometheusOperator.endpoint.port`  | 9911                        | Port used by the `Service` to publish the metrics port                                                              |
-
 ### Enable [kube2iam](https://github.com/jtblin/kube2iam)
 
 Kube2iam delegates AWS roles to pods by redirecting calls to the AWS EC2 metadata API to a local container which resolves temporary credentials for the required role.
@@ -183,16 +146,16 @@ _Note: the trust policy is based on a KOPS deployment where every worker gets a 
 Run this bash snippet to create the required role:
 
 ```bash
-ROLE_NAME="<Name of your role e.g. SkipperIngress>"
-INSTANCE_PROFILE_NAME="Name of the instance profile e.g. EC2-SkipperIngress"
+ROLE_NAME="<Name of your role e.g. Kube-Ingress-AWS-Controller>"
+INSTANCE_PROFILE_NAME="Name of the instance profile e.g. EC2-Kube-Ingress-AWS-Controller"
 
 aws iam create-role --role-name $ROLE_NAME --assume-role-policy-document file://trust-policy.json
-aws iam put-role-policy --role-name $ROLE_NAME --policy-name ExternalDNS-Permissions-Policy --policy-document file://policy-document.json
+aws iam put-role-policy --role-name $ROLE_NAME --policy-name Kube-Ingress-Aws-Controller-Policy --policy-document file://policy-document.json
 aws iam create-instance-profile --instance-profile-name $INSTANCE_PROFILE_NAME
 aws iam add-role-to-instance-profile --instance-profile-name $INSTANCE_PROFILE_NAME --role-name $ROLE_NAME
 ```
 
-To assign this role to Skipper you will need the ARN of your previously created role.
+To assign this role to Kube-Ingress-AWS-Controller you will need the ARN of your previously created role.
 To get the role execute the following snippet:
 
 ```bash
@@ -209,50 +172,6 @@ helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
     --set ingressController.awsRegion="<AWS region>" \
     --set kube2iam.awsArn="<your AWS ARN goes here>" \
   "<your release name e.g. kube-ingress-aws-controller>"
-```
-
-### Debugging
-
-Sometimes something is just going wrong and you have no clue what's happening.
-You can set the log level to `DEBUG` to get more insights by adding the flat `--set skipper.logLevel="DEBUG"` to the `helm` CLI like this:
-
-```bash
-helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
-    --install \
-    --wait \
-    --set ingressController.awsRegion="<AWS region>" \
-    --set skipper.logLevel="DEBUG" \
-    "kube-ingress-aws-controller" \
-  "<your release name e.g. kube-ingress-aws-controller>"
-```
-
-The available log levels are:
-
-- `ERROR`
-- `WARN`
-- `INFO`
-- `DEBUG`
-
-### Enable `ingress.class` annotation handling
-
-If you want to split the traffic to different Skipper deployments you can define the value `skipper.ingressClass` which will enable the built-in support of Skipper to parse the pod annotation `kubernetes.io/ingress.class`.
-
-Pass the flag `--set skipper.ingressClass=skipper-prod` to the `helm` CLI like this
-
-```bash
-helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
-    --install \
-    --wait \
-    --set ingressController.awsRegion="<AWS region>" \
-    --set skipper.ingressClass="skipper-prod" \
-    "kube-ingress-aws-controller" \
-  "<your release name e.g. kube-ingress-aws-controller>"
-```
-
-To enable the parsing support and force Skipper to filter for pods with the annotation:
-
-```yaml
-kubernetes.io/ingress.class: skipper-prod
 ```
 
 ### Deploy with `values.yaml` file
@@ -273,10 +192,7 @@ If you add functionality to this chart please check if the following validation 
 
 ```bash
 helm lint \
-    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
-    --set skipper.ingressClass=skipper \
-    --set skipper.logLevel=INFO \
-    --set prometheusOperator.create=true \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/Kube-Ingress-AWS-Controller" \
     --set rbac.create=true \
     kube-ingress-aws-controller/
 ```
@@ -287,10 +203,7 @@ or if you have Kubernetes with installed Tiller available:
 helm install \
     --dry-run \
     --debug \
-    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
-    --set skipper.ingressClass=skipper \
-    --set skipper.logLevel=INFO \
-    --set prometheusOperator.create=true \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/Kube-Ingress-AWS-Controller" \
     --set rbac.create=true \
     kube-ingress-aws-controller/
 ```

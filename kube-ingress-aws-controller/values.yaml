@@ -1,22 +1,3 @@
-# configuration values for Skipper
-skipper:
-  # Overwrites the log level if set
-  logLevel: ''
-  # enables ingress class filtering if set
-  ingressClass: ''
-  # update strategy for the daemonset
-  updateStrategy:
-    type: RollingUpdate
-  # endpoint settings for the Skipper endpoint
-  endpoint:
-    name: skipper
-    port: 9999
-  # image settings for the Skipper daemonset
-  image:
-    repository: registry.opensource.zalan.do/pathfinder/skipper
-    tag: v0.9.202
-    pullPolicy: IfNotPresent
-
 # configuration for the ingress-controller
 ingressController:
   # default of 1 should be enough because it only will prevent the creation of new
@@ -36,29 +17,6 @@ kube2iam:
   # ARN kube2iam should assign to Skipper and the ingress controller
   # to create ALBs within AWS
   awsArn: ""
-
-# configuration for Prometheus-Operator
-prometheusOperator:
-  # label for Prometheus job
-  jobLabel: kube-ingress-aws-controller
-  # name of the ServiceMonitor resource
-  monitorName: kube-aws-ingress-metrics
-  # Namespace where Prometheus-Operator is deployed
-  # all ServiceMonitors have to be deployed in the Namespace where Prometheus-Operator
-  # is deployed
-  namespace: monitoring
-  # enable Prometheus-Operator support
-  create: false
-  # Interval how often Prometheus will scrape metrics
-  scrapeInterval: 30s
-  # Additonal labels assigned to the ServiceMonitor
-  # by default Prometheus-Operator uses the following default as selector
-  labels:
-    prometheus: kube-prometheus
-  # metrics endpoint configuration
-  endpoint:
-    name: skipper-metrics
-    port: 9911
 
 # Configuration for resource alocation of the daemonset
 resources:
