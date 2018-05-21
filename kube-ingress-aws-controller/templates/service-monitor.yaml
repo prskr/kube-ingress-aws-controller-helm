@@ -1,0 +1,28 @@
+{{ if .Values.prometheusOperator.create }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.prometheusOperator.monitorName }}
+  namespace: {{ .Values.prometheusOperator.namespace }}
+  labels:
+    app: {{ template "kube-ingress-aws-controller.name" . }}
+    chart: {{ template "kube-ingress-aws-controller.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{ toYaml .Values.prometheusOperator.labels | indent 4 }}
+spec:
+  jobLabel: {{ .Values.prometheusOperator.jobLabel }}
+  selector:
+      app: {{ template "kube-ingress-aws-controller.name" . }}
+      chart: {{ template "kube-ingress-aws-controller.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      component: ingress
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: {{ .Values.ingressController.metricsEndpoint.name }}
+      path: /metrics
+      interval: {{ .Values.prometheusOperator.scrapeInterval }}
+{{ end }}

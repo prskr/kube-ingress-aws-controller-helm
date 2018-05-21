@@ -12,6 +12,9 @@ ingressController:
   # if not set kube-ingress-aws-controller won't be able create ALBs at all
   awsRegion: ""
   args: []
+  metricsEndpoint:
+    name: kube-ingress-aws-controller-metrics
+    port: 7979
 
 # configuration for kube2iam
 kube2iam:
@@ -33,8 +36,27 @@ rbac:
   # enable RBAC support
   create: false
   # name of the ServiceAccount
-  svcAccountName: aws-ingress-controller
+  svcAccountName: kube-ingress-aws-controller
   # Name of the ClusterRole for Skipper
-  clusterRoleName: aws-ingress-controller
+  clusterRoleName: kube-ingress-aws-controller
   # Name of the ClusterRoleBinding
-  clusterRoleBindingName: aws-ingress-controller
+  clusterRoleBindingName: kube-ingress-aws-controller
+
+# configuration for Prometheus-Operator
+prometheusOperator:
+  # label for Prometheus job
+  jobLabel: kube-ingress-aws-controller
+  # name of the ServiceMonitor resource
+  monitorName: kube-ingress-aws-controller-metrics
+  # Namespace where Prometheus-Operator is deployed
+  # all ServiceMonitors have to be deployed in the Namespace where Prometheus-Operator
+  # is deployed
+  namespace: monitoring
+  # enable Prometheus-Operator support
+  create: false
+  # Interval how often Prometheus will scrape metrics
+  scrapeInterval: 30s
+  # Additonal labels assigned to the ServiceMonitor
+  # by default Prometheus-Operator uses the following default as selector
+  labels:
+    prometheus: kube-prometheus

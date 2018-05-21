@@ -42,10 +42,22 @@ spec:
         env:
         - name: AWS_REGION
           value: {{ .Values.ingressController.awsRegion }}
-{{if .Values.ingressController.args }}
+{{- if or .Values.ingressController.args .Values.prometheusOperator.create }}
         args:
-{{ toYaml .Values.ingressController.args | indent 10 }}
-{{ end }}
+{{- end }}
+{{- if .Values.prometheusOperator.create }}
+          - "-metrics-address=:{{- .Values.ingressController.metricsEndpoint.port }}"
+{{- end }}
+{{- if .Values.ingressController.args }}
+{{- range .Values.ingressController.args }}
+          - {{ . | quote }}
+{{- end }}
+{{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+{{- if .Values.prometheusOperator.create }}
+        ports:
+        - name: {{ .Values.ingressController.metricsEndpoint.name }}
+          containerPort: {{ .Values.ingressController.metricsEndpoint.port }}
+{{- end }}
 {{ end }}

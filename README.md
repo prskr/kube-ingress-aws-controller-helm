@@ -193,7 +193,7 @@ If you add functionality to this chart please check if the following validation 
 ```bash
 helm lint \
     --set ingressController.awsRegion="us-east-1" \
-    --set ingressController.args={"--version"} \
+    --set ingressController.args[0]='--version' \
     --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set rbac.create=true \
     --set prometheusOperator.create=true \
@@ -207,7 +207,7 @@ helm install \
     --dry-run \
     --debug \
     --set ingressController.awsRegion="us-east-1" \
-    --set ingressController.args={"--version"} \
+    --set-string ingressController.args[0]='--version' \
     --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set rbac.create=true \
     --set prometheusOperator.create=true \
