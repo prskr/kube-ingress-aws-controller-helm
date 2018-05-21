@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ template "kube-ingress-aws-controller.fullname" . }}-metrics"
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "kube-ingress-aws-controller.name" . }}
     chart: {{ template "kube-ingress-aws-controller.chart" . }}
@@ -11,12 +12,12 @@ metadata:
     component: ingress
 spec:
   ports:
-    - name: {{ .Values.prometheusOperator.endpoint.name }}
-      port: {{ .Values.prometheusOperator.endpoint.port }}
-      targetPort: {{ .Values.prometheusOperator.endpoint.port }}
+    - name: {{ .Values.ingressController.metricsEndpoint.name }}
+      port: {{ .Values.ingressController.metricsEndpoint.port }}
+      targetPort: {{ .Values.ingressController.metricsEndpoint.port }}
       protocol: TCP
   selector:
-    app: "{{ template "kube-ingress-aws-controller.name" . }}-skipper"
+    app: "{{ template "kube-ingress-aws-controller.name" . }}"
     chart: {{ template "kube-ingress-aws-controller.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -22,7 +22,7 @@ spec:
     matchNames:
       - {{ .Release.Namespace }}
   endpoints:
-    - port: {{ .Values.prometheusOperator.endpoint.name }}
+    - port: {{ .Values.ingressController.metricsEndpoint.name }}
       path: /metrics
       interval: {{ .Values.prometheusOperator.scrapeInterval }}
 {{ end }}
