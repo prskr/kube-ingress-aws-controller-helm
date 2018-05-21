@@ -192,8 +192,11 @@ If you add functionality to this chart please check if the following validation 
 
 ```bash
 helm lint \
-    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/Kube-Ingress-AWS-Controller" \
+    --set ingressController.awsRegion="us-east-1" \
+    --set ingressController.args={"--version"} \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set rbac.create=true \
+    --set prometheusOperator.create=true \
     kube-ingress-aws-controller/
 ```
 
@@ -203,7 +206,10 @@ or if you have Kubernetes with installed Tiller available:
 helm install \
     --dry-run \
     --debug \
-    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/Kube-Ingress-AWS-Controller" \
+    --set ingressController.awsRegion="us-east-1" \
+    --set ingressController.args={"--version"} \
+    --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set rbac.create=true \
+    --set prometheusOperator.create=true \
     kube-ingress-aws-controller/
 ```

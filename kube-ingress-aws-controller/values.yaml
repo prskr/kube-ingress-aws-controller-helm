@@ -1,16 +1,17 @@
 # configuration for the ingress-controller
 ingressController:
+  # image settings for kube-ingress-aws-controller
+  image:
+    repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
+    tag: v0.6.10
+    pullPolicy: IfNotPresent
   # default of 1 should be enough because it only will prevent the creation of new
   # ALB rules if the pod is not present in case of updates or outages
   replicas: 1
   # REQUIRED setting for kube-ingress-aws-controller
   # if not set kube-ingress-aws-controller won't be able create ALBs at all
   awsRegion: ""
-  # image settings for kube-ingress-aws-controller
-  image:
-    repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
-    tag: v0.6.10
-    pullPolicy: IfNotPresent
+  args: []
 
 # configuration for kube2iam
 kube2iam:
@@ -22,10 +23,10 @@ kube2iam:
 resources:
   limits:
    cpu: 200m
-   memory: 200Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+   memory: 100Mi
+  requests:
+   cpu: 50m
+   memory: 50Mi
 
 # Configuration for Kubernetes RBAC
 rbac:

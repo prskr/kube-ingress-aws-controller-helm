@@ -42,4 +42,10 @@ spec:
         env:
         - name: AWS_REGION
           value: {{ .Values.ingressController.awsRegion }}
+{{if .Values.ingressController.args }}
+        args:
+{{ toYaml .Values.ingressController.args | indent 10 }}
+{{ end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
 {{ end }}

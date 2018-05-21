@@ -23,7 +23,7 @@ install:
   - helm registry version quay.io
 
 script:
-  - helm lint --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress",prometheusOperator.create=true,skipper.ingressClass=skipper,skipper.logLevel=INFO kube-ingress-aws-controller/
+  - helm lint --set ingressController.awsRegion="us-east-1",ingressController.args={"--version"},kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress",rbac.create=true,prometheusOperator.create=true kube-ingress-aws-controller
   - helm registry login -u baez -p "$QUAY_IO_TOKEN" quay.io
   - cd kube-ingress-aws-controller/
   - helm registry delete-package quay.io/baez/kube-ingress-aws-controller@${CHART_VERSION} || true
