@@ -9,7 +9,7 @@ ingressController:
   # image settings for kube-ingress-aws-controller
   image:
     repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
-    tag: v0.6.8 
+    tag: v0.6.10
     pullPolicy: IfNotPresent
 
 # configuration for kube2iam
@@ -33,8 +33,6 @@ rbac:
   create: false
   # name of the ServiceAccount
   svcAccountName: aws-ingress-controller
-  # Namespace where ServiceAccount will be deployed
-  svcAccountNamespace: kube-system
   # Name of the ClusterRole for Skipper
   clusterRoleName: aws-ingress-controller
   # Name of the ClusterRoleBinding

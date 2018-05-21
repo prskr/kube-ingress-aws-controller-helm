@@ -1,9 +1,7 @@
-{{- with .Values.rbac }}
-{{- if .create }}
+{{- if .Values.rbac.create }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name:  {{ .svcAccountName }}
-  namespace: {{ .svcAccountNamespace }}
-{{- end }}
+  name:  {{ .Values.rbac.svcAccountName }}
+  namespace: {{ .Release.Namespace }}
 {{- end }}
