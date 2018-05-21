@@ -46,7 +46,7 @@ spec:
         args:
 {{- end }}
 {{- if .Values.prometheusOperator.create }}
-          - "-metrics-address=:{{- .Values.ingressController.metricsEndpoint.port }}"
+          - "--metrics-address=:{{- .Values.ingressController.metricsEndpoint.port }}"
 {{- end }}
 {{- if .Values.ingressController.args }}
 {{- range .Values.ingressController.args }}

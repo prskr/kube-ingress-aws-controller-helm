@@ -3,14 +3,33 @@
 [![Build Status](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm.svg?branch=master)](https://travis-ci.org/baez90/kube-ingress-aws-controller-helm)
 
 - [Helm chart for kube-ingress-aws-controller](#helm-chart-for-kube-ingress-aws-controllerhttps---githubcom-zalando-incubator-kube-ingress-aws-controller)
+  - [Disclaimer](#disclaimer)
   - [Helm registry](#helm-registry)
   - [Deployment](#deployment)
     - [Minimal](#minimal)
     - [Other namespace than `default`](#other-namespace-than-default)
     - [Enable RBAC](#enable-rbachttps---kubernetesio-docs-admin-authorization-rbac)
     - [Enable kube2iam](#enable-kube2iamhttps---githubcom-jtblin-kube2iam)
+    - [Passing extra args to the controller](#passing-extra-args-to-the-controller)
     - [Deploy with `values.yaml` file](#deploy-with-valuesyaml-file)
   - [Development](#development)
+
+## Disclaimer
+
+**This Helm chart is still under development and is not considered stable (yet)!**
+
+There might be breaking changes which are applied without any further notice and that **might** harm also some kittens!
+
+**History:**
+
+- Moved Skipper part of this chart to [second Repository](https://github.com/baez90/skipper-helm)
+- Renamed `rbac.enable` to `rbac.create`
+- Renamed `prometheusOperator.enable` to `prometheusOperator.create`
+
+If you encounter any errors feel free to leave me an Issue and I'll try to help as good and fast as I can but I'm maintaining this chart mostly in my spare time so please be kind :wink:
+
+Furthermore I'm trying to keep the docs as up-to-date and detailed as I can but there might be some details that I don't (and probably won't) cover in this docs.
+You can always have a look at the [`values.yaml`](kube-ingress-aws-controller/values.yaml) file to see all config options.
 
 ## Helm registry
 
@@ -174,6 +193,36 @@ helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
   "<your release name e.g. kube-ingress-aws-controller>"
 ```
 
+### Passing extra args to the controller
+
+To pass extra arguments to the controller (e.g. to change the API server URI) add them like this:
+
+```bash
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
+    --install \
+    --wait \
+    --set ingressController.awsRegion="<AWS region>" \
+    --set ingressController.args[0]="--version" \
+  "<your release name e.g. kube-ingress-aws-controller>"
+```
+
+This gets a little bit cumbersome if you want to pass multiple arguments.
+
+Therefore a second syntax exists, that enables you to pass multiple arguments at once:
+
+```bash
+helm registry upgrade quay.io/baez/kube-ingress-aws-controller -- \
+    --install \
+    --wait \
+    --set ingressController.awsRegion="<AWS region>" \
+    --set ingressController.args='{--version,--test}' \
+  "<your release name e.g. kube-ingress-aws-controller>"
+```
+
+_Note: the quotes around the block `{...}` are mandatory!_
+
+There's no official documentation of all available switches but one can have a look at the [`.go` code](https://github.com/zalando-incubator/kube-ingress-aws-controller/blob/master/controller.go).
+
 ### Deploy with `values.yaml` file
 
 If you don't want to pass all options via `--set` you can also copy the shipped `./kube-ingress-aws-controller/values.yaml`, adopt it and pass it to the `helm` CLI like this:
@@ -207,7 +256,7 @@ helm install \
     --dry-run \
     --debug \
     --set ingressController.awsRegion="us-east-1" \
-    --set-string ingressController.args[0]='--version' \
+    --set ingressController.args='{--version,--test}' \
     --set kube2iam.awsArn="arn:aws:iam::$(uuidgen | cut -d '-' -f 1):role/SkipperIngress" \
     --set rbac.create=true \
     --set prometheusOperator.create=true \
