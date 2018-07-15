@@ -3,7 +3,7 @@ ingressController:
   # image settings for kube-ingress-aws-controller
   image:
     repository: registry.opensource.zalan.do/teapot/kube-ingress-aws-controller
-    tag: v0.6.10
+    tag: v0.7.2
     pullPolicy: IfNotPresent
   # default of 1 should be enough because it only will prevent the creation of new
   # ALB rules if the pod is not present in case of updates or outages
